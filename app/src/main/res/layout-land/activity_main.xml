@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="comnikitc.github.mobdev_hw_2.MainActivity">
+
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/elements"
+        android:gravity="center_horizontal">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/colorPickerScroll"
+            android:gravity="bottom|center_horizontal"
+            android:id="@+id/chooseLayout"
+            android:layout_alignParentStart="true"
+            android:layout_width="268dp">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_alignStart="@+id/chooseColorImage"
+                android:layout_height="100dp"
+                android:gravity="bottom"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp">
+
+                <ImageView
+                    android:id="@+id/currentColorImage"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:background="@android:color/black"
+                    android:textAlignment="gravity"
+                    android:layout_gravity="bottom|center_horizontal"
+                    android:layout_marginTop="20dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_height="60dp"
+                android:gravity="center_horizontal"
+                android:layout_width="80dp">
+
+                <TextView
+                    android:text="RGB"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/currentColorRGB"
+                    android:textAlignment="gravity"
+                    android:gravity="top|center" />
+
+                <TextView
+                    android:text="(0, 0, 0)"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:id="@+id/currentValueRGB"
+                    android:textAlignment="gravity"
+                    android:gravity="bottom|center"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_height="60dp"
+                android:id="@+id/currentHSVLayout"
+
+                android:weightSum="1"
+                android:elevation="1dp"
+                android:gravity="center_horizontal"
+                android:layout_width="match_parent">
+
+                <TextView
+                    android:text="HSV"
+                    android:layout_width="45dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/currentColorHSV"
+                    android:layout_centerHorizontal="true"
+                    android:gravity="top|center" />
+
+                <TextView
+                    android:text="(0, 0, 0)"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:id="@+id/currentValueHSV"
+                    android:textAlignment="gravity"
+                    android:layout_centerHorizontal="true"
+                    android:gravity="bottom|center"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/currentLayout"
+            android:layout_alignParentTop="false"
+            android:layout_alignParentEnd="false"
+            android:gravity="bottom|center_horizontal"
+            android:layout_alignParentStart="false">
+
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_alignStart="@+id/chooseColorImage"
+                android:layout_height="100dp"
+                android:gravity="bottom"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="10dp">
+
+                <ImageView
+                    android:id="@+id/chooseColorImage"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:background="@android:color/black"
+                    android:textAlignment="gravity"
+                    android:layout_gravity="bottom|center_horizontal"
+                    android:layout_marginTop="20dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_height="60dp"
+                android:gravity="center_horizontal"
+                android:layout_width="80dp">
+
+                <TextView
+                    android:text="RGB"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/chooseColorRGB"
+                    android:textAlignment="gravity"
+                    android:gravity="top|center" />
+
+                <TextView
+                    android:text="(0, 0, 0)"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:id="@+id/chooseValueRGB"
+                    android:textAlignment="gravity"
+                    android:gravity="bottom"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_height="60dp"
+                android:id="@+id/chooseHSVLayout"
+
+                android:weightSum="1"
+                android:elevation="1dp"
+                android:gravity="center"
+                android:layout_width="match_parent">
+
+                <TextView
+                    android:text="HSV"
+                    android:layout_width="45dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/chooseColorHSV"
+                    android:layout_centerHorizontal="true"
+                    android:gravity="top|center" />
+
+                <TextView
+                    android:text="(0, 0, 0)"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:id="@+id/chooseValueHSV"
+                    android:textAlignment="gravity"
+                    android:layout_centerHorizontal="true"
+                    android:gravity="bottom|center"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/colorPickerScroll"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true">
+
+        <LinearLayout
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:id="@+id/colorPickerLayout"
+
+            android:layout_width="match_parent"
+            android:paddingBottom="50dp"
+            android:paddingTop="50dp">
+
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:text="Цвет на палитре"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/currentColor"
+            android:textAlignment="gravity"
+            android:gravity="top|left"
+            android:textSize="12sp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="69dp" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="101dp">
+
+        <TextView
+            android:text="Выбранный цвет"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/chooseColor"
+            android:textAlignment="gravity"
+            android:gravity="top|left"
+            android:textSize="12sp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true" />
+    </FrameLayout>
+
+
+</RelativeLayout>
