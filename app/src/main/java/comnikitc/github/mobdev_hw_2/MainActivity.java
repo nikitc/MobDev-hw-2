@@ -1,11 +1,13 @@
 package comnikitc.github.mobdev_hw_2;
 
+import android.content.Context;
 import android.graphics.LinearGradient;
 import android.graphics.Shader;
 import android.graphics.drawable.PaintDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RectShape;
 import android.os.SystemClock;
+import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MotionEvent;
@@ -15,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.graphics.Color;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -103,19 +106,15 @@ public class MainActivity extends AppCompatActivity {
         return SystemClock.elapsedRealtime() - lastClickTime < doublePressInterval;
     }
 
-    protected View.OnClickListener GetOnClickListener() {
-        View.OnClickListener onClickListener = new View.OnClickListener() {
+    protected View.OnLongClickListener GetOnLongClickListener() {
+        View.OnLongClickListener onClickListener = new View.OnLongClickListener() {
             @Override
-            public void onClick(View view) {
-                ColorButton currentColorButton = (ColorButton) view;
-
-                if (IsDoubleClick(currentColorButton.lastClickTime)) {
-                    currentColorButton.currentColor = currentColorButton.originalColor;
-                } else {
-                    DisplayCurrentStatus(currentColorButton);
-                }
-
-                currentColorButton.lastClickTime = SystemClock.elapsedRealtime();
+            public boolean onLongClick(View view) {
+                Toast toast = Toast.makeText(getApplicationContext(),
+                        "Start editing", Toast.LENGTH_SHORT);
+                toast.show();
+                DisableColorPickerScroll();
+                return true;
             }
         };
 
@@ -138,14 +137,17 @@ public class MainActivity extends AppCompatActivity {
                         HandleActionDown(currentColorButton);
                         break;
                     case MotionEvent.ACTION_MOVE:
-                        ToggleColorPickerScroll(true);
                         HandleActionMove(currentColorButton, x, y, event.getX(), event.getY());
                         break;
-                    case MotionEvent.ACTION_UP:
-                        ToggleColorPickerScroll(false);
+                    case MotionEvent.ACTION_CANCEL:
+                        Toast toast = Toast.makeText(getApplicationContext(),
+                                "Editing is finished", Toast.LENGTH_SHORT);
+                        toast.show();
+                        HorizontalScrollView scroll = (HorizontalScrollView) findViewById(R.id.colorPickerScroll);
+                        scroll.setOnTouchListener(null);
                         break;
                 }
-                return true;
+                return false;
             }
         };
         return onClickListener;
@@ -155,6 +157,9 @@ public class MainActivity extends AppCompatActivity {
                                     float x, float y) {
 
         if (oldX < x && Math.abs(oldY - y) < 1) {
+            if (currentColorButton.currentColor[0] == currentColorButton.rightBorder) {
+                CallVibrator();
+            }
             if (currentColorButton.currentColor[0] < currentColorButton.rightBorder) {
                 currentColorButton.currentColor[0] += 0.25;
                 currentColorButton.setBackgroundColor(Color.HSVToColor(currentColorButton.currentColor));
@@ -164,6 +169,9 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (oldX > x && Math.abs(oldY - y) < 1) {
+            if (currentColorButton.currentColor[0] == currentColorButton.leftBorder) {
+                CallVibrator();
+            }
             if (currentColorButton.currentColor[0] > currentColorButton.leftBorder) {
                 currentColorButton.currentColor[0] -= 0.25;
                 currentColorButton.setBackgroundColor(Color.HSVToColor(currentColorButton.currentColor));
@@ -173,6 +181,9 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (oldY < y && Math.abs(oldX - x) < 1) {
+            if (currentColorButton.currentColor[2] == currentColorButton.downBorderColor) {
+                CallVibrator();
+            }
             if (currentColorButton.currentColor[2] > currentColorButton.downBorderColor) {
                 currentColorButton.currentColor[2] -= 0.05;
                 currentColorButton.setBackgroundColor(Color.HSVToColor(currentColorButton.currentColor));
@@ -181,6 +192,9 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
         if (oldY > y && Math.abs(oldX - x) < 1) {
+            if (currentColorButton.currentColor[2] == currentColorButton.upBorderColor) {
+                CallVibrator();
+            }
             if (currentColorButton.currentColor[2] < currentColorButton.upBorderColor) {
                 currentColorButton.currentColor[2] += 0.05;
                 currentColorButton.setBackgroundColor(Color.HSVToColor(currentColorButton.currentColor));
@@ -203,16 +217,21 @@ public class MainActivity extends AppCompatActivity {
         DisplayCurrentStatus(currentColorButton);
     }
 
-    protected void ToggleColorPickerScroll(final Boolean  flag) {
+    protected void DisableColorPickerScroll() {
 
         HorizontalScrollView scroll = (HorizontalScrollView) findViewById(R.id.colorPickerScroll);
         scroll.setOnTouchListener( new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event)
             {
-                return flag;
+                return true;
             }
         });
+    }
+
+    protected void CallVibrator() {
+        Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        vibrator.vibrate(100);
     }
 
     protected void CreateColorPicker() {
@@ -226,6 +245,7 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 0; i < countButtons; i++) {
             pixelHSV[0] += 22.5;
             ColorButton button = GetNewButton(pixelHSV);
+            button.setOnLongClickListener(GetOnLongClickListener());
             button.setOnTouchListener(GetOnTouchListener());
             colorPickerLayout.addView(button);
         }
