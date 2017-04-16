@@ -17,7 +17,7 @@ public class ColorButton extends Button implements View.OnLongClickListener {
     public float rightBorder;
     public long lastClickTime = 0;
     public float upBorderColor = 1;
-    public float downBorderColor = 0;
+    public float downBorderColor = 0.0f;
     public Boolean isBeingEdited = false;
 
     public ColorButton(Context context, float[] originalColor) {
@@ -44,7 +44,7 @@ public class ColorButton extends Button implements View.OnLongClickListener {
     public String GetStringHSVColor() {
         float hue = currentColor[0];
         float saturation = currentColor[1];
-        float value = currentColor[2];
+        float value = Math.max(0.0f, currentColor[2]);
 
         return String.format("(%.2f, %.2f, %.2f)", hue, saturation, value);
     }

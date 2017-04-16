@@ -188,7 +188,7 @@
 
     </LinearLayout>
 
-    <HorizontalScrollView
+    <comnikitc.github.mobdev_hw_2.ColorPickerScroll
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/colorPickerScroll"
@@ -205,7 +205,7 @@
             android:paddingTop="50dp">
 
         </LinearLayout>
-    </HorizontalScrollView>
+    </comnikitc.github.mobdev_hw_2.ColorPickerScroll>
 
     <FrameLayout
         android:layout_width="wrap_content"

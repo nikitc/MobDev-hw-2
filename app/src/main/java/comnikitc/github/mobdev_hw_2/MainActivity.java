@@ -12,7 +12,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.graphics.Color;
@@ -129,6 +128,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public boolean onTouch(View view, MotionEvent event) {
+                ColorPickerScroll scroll = (ColorPickerScroll) findViewById(R.id.colorPickerScroll);
                 ColorButton currentColorButton = (ColorButton) view;
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
@@ -137,14 +137,18 @@ public class MainActivity extends AppCompatActivity {
                         HandleActionDown(currentColorButton);
                         break;
                     case MotionEvent.ACTION_MOVE:
+                        if (!scroll.isEdited) {
+                            break;
+                        }
                         HandleActionMove(currentColorButton, x, y, event.getX(), event.getY());
                         break;
                     case MotionEvent.ACTION_CANCEL:
-                        Toast toast = Toast.makeText(getApplicationContext(),
-                                "Editing is finished", Toast.LENGTH_SHORT);
-                        toast.show();
-                        HorizontalScrollView scroll = (HorizontalScrollView) findViewById(R.id.colorPickerScroll);
-                        scroll.setOnTouchListener(null);
+                        if (scroll.isEdited) {
+                            Toast toast = Toast.makeText(getApplicationContext(),
+                                    "Editing is finished", Toast.LENGTH_SHORT);
+                            toast.show();
+                            scroll.isEdited = false;
+                        }
                         break;
                 }
                 return false;
@@ -181,7 +185,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (oldY < y && Math.abs(oldX - x) < 1) {
-            if (currentColorButton.currentColor[2] == currentColorButton.downBorderColor) {
+            if (currentColorButton.currentColor[2] <= currentColorButton.downBorderColor) {
                 CallVibrator();
             }
             if (currentColorButton.currentColor[2] > currentColorButton.downBorderColor) {
@@ -218,15 +222,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     protected void DisableColorPickerScroll() {
-
-        HorizontalScrollView scroll = (HorizontalScrollView) findViewById(R.id.colorPickerScroll);
-        scroll.setOnTouchListener( new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event)
-            {
-                return true;
-            }
-        });
+        ColorPickerScroll scroll = (ColorPickerScroll) findViewById(R.id.colorPickerScroll);
+        scroll.isEdited = true;
     }
 
     protected void CallVibrator() {
