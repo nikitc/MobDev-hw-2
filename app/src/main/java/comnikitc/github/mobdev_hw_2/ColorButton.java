@@ -31,6 +31,12 @@ public class ColorButton extends Button implements View.OnLongClickListener {
         setOnLongClickListener(this);
     }
 
+    public ColorButton(Context context, int color) {
+        super(context);
+        Color.colorToHSV(color, this.originalColor);
+        Color.colorToHSV(color, this.currentColor);
+    }
+
     public ColorButton(Context context) {
         super(context);
     }

@@ -249,5 +249,21 @@
             android:layout_toEndOf="@+id/frameLayout2" />
     </FrameLayout>
 
+    <Button
+        android:layout_height="30dp"
+        android:id="@+id/favoritebutton"
+        android:background="@android:drawable/star_big_on"
+        android:layout_width="30dp"
+        android:layout_alignParentEnd="true" />
+
+    <Button
+        android:layout_height="wrap_content"
+        android:id="@+id/favoriteColorsButton"
+        android:textSize="12sp"
+        android:text="Favorites"
+        android:layout_width="wrap_content"
+        android:layout_above="@+id/colorPickerScroll"
+        android:layout_alignParentEnd="true" />
+
 
 </RelativeLayout>
