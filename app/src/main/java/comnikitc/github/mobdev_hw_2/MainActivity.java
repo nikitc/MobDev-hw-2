@@ -1,13 +1,6 @@
 package comnikitc.github.mobdev_hw_2;
 
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.LinearGradient;
-import android.graphics.Shader;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.PaintDrawable;
-import android.graphics.drawable.ShapeDrawable;
-import android.graphics.drawable.shapes.RectShape;
 import android.os.SystemClock;
 import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
@@ -20,14 +13,14 @@ import android.widget.LinearLayout;
 import android.graphics.Color;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+
+public class MainActivity extends AppCompatActivity{
 
     Button favoriteButton;
-    ArrayDeque<Integer> favoriteColors = new ArrayDeque<Integer>();
+    ArrayList<float[]> favoriteColors = new ArrayList<>();
+    final int maxFavoriteColors = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,92 +28,96 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         CreateColorPicker();
         CreateAddFavoriteButton();
-
-        Button favorites = (Button) findViewById(R.id.favoriteColorsButton);
-        favorites.setOnClickListener(this);
-
-        Intent intent = getIntent();
-        if (intent.getExtras() != null) {
-            int color = intent.getExtras().getInt("chooseColor");
-            ArrayList<Integer> colors = intent.getExtras().getIntegerArrayList("favoriteColors");
-            if (colors == null) {
-                return;
-            }
-            favoriteColors = new ArrayDeque<Integer>(colors);
-            float[] hsv = new float[3];
-            Color.colorToHSV(color, hsv);
-            ColorButton buttonDisplay = new ColorButton(this, hsv);
-            DisplayCurrentStatus(buttonDisplay);
-        }
     }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+
+        ColorImageView chooseColorView = (ColorImageView) findViewById(R.id.chooseColorImage);
+        savedInstanceState.putInt("sizeFavoritesColors", favoriteColors.size());
+
+        for (int i = 0; i < favoriteColors.size(); i++) {
+            savedInstanceState.putFloatArray("favorite" + (i + 1), favoriteColors.get(i));
+        }
+
+        savedInstanceState.putFloatArray("chooseColor", chooseColorView.getHsvColor());
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        int count = savedInstanceState.getInt("sizeFavoritesColors");
+        for (int i = count; i >= 1; i--) {
+            favoriteColors.add(savedInstanceState.getFloatArray("favorite" + i));
+        }
+
+        CreateFavoriteColors();
+        DisplayCurrentStatus(savedInstanceState.getFloatArray("chooseColor"));
+    }
+
 
     protected void CreateAddFavoriteButton() {
         favoriteButton = (Button) findViewById(R.id.favoritebutton);
         favoriteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ImageView chooseColor = (ImageView) findViewById(R.id.chooseColorImage);
-                ColorDrawable drawable = (ColorDrawable) chooseColor.getBackground();
-                if (favoriteColors.size() == 3) {
-                    favoriteColors.removeFirst();
+                ColorImageView chooseColor = (ColorImageView) findViewById(R.id.chooseColorImage);
+                if (favoriteColors.size() == maxFavoriteColors) {
+                    favoriteColors.remove(0);
                 }
-                favoriteColors.add(drawable.getColor());
+                favoriteColors.add(chooseColor.getHsvColor());
 
                 Toast toast = Toast.makeText(getApplicationContext(),
                         "Color add favorite", Toast.LENGTH_SHORT);
                 toast.show();
+
+                CreateFavoriteColors();
             }
         });
     }
 
-    protected ColorButton GetNewButton(float[] pixelHSV) {
-        ColorButton button = new ColorButton(this, pixelHSV.clone());
-        button.setBackgroundColor(Color.HSVToColor(pixelHSV));
+    protected void CreateFavoriteColors() {
+        LinearLayout favoriteColorsLayout = (LinearLayout) findViewById(R.id.favoriteColors);
+        favoriteColorsLayout.removeAllViews();
+        for (int i = 0; i < favoriteColors.size(); i++) {
+            FavoriteButton button = new FavoriteButton(this, favoriteColors.get(i));
+            button.setBackgroundColor(Color.HSVToColor(favoriteColors.get(i)));
 
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT);
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    FavoriteButton favoriteButton = (FavoriteButton) view;
 
-        params.width = 120;
-        params.height = 120;
-        params.leftMargin = 45;
-        params.rightMargin = 45;
-        button.setLayoutParams(params);
+                    DisplayCurrentStatus(favoriteButton.hsvColor);
+                }
+            });
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT);
 
-        return button;
+            params.width = 80;
+            params.height = 80;
+            params.leftMargin = 20;
+            params.rightMargin = 20;
+            button.setLayoutParams(params);
+            favoriteColorsLayout.addView(button);
+        }
     }
 
-    protected void SetGradientBackGround(final LinearLayout colorPickerLayout) {
-        ShapeDrawable.ShaderFactory factory = new ShapeDrawable.ShaderFactory() {
-            @Override
-            public Shader resize(int width, int height) {
-                LinearGradient lg = new LinearGradient(0, 0,
-                        colorPickerLayout.getWidth(), colorPickerLayout.getHeight(),
-                        GradientColorPicker.GetValueColors(),
-                        GradientColorPicker.GetPositionColors(),
-                        Shader.TileMode.REPEAT);
-                return lg;
-            }
-        };
+    protected void DisplayCurrentStatus(float[] hsvColor) {
 
-        PaintDrawable paint = new PaintDrawable();
-        paint.setShape(new RectShape());
-        paint.setShaderFactory(factory);
-        colorPickerLayout.setBackground(paint);
-    }
-
-    protected void DisplayCurrentStatus(ColorButton currentColorButton) {
-
-        ImageView chooseColorView = (ImageView) findViewById(R.id.chooseColorImage);
+        ColorImageView chooseColorView = (ColorImageView) findViewById(R.id.chooseColorImage);
+        chooseColorView.setHsvColor(hsvColor);
 
         TextView rgbText = (TextView) findViewById(R.id.chooseValueRGB);
         TextView hsvText = (TextView) findViewById(R.id.chooseValueHSV);
 
-        chooseColorView.setBackgroundColor(
-                Color.HSVToColor(currentColorButton.currentColor));
+        chooseColorView.setBackgroundColor(Color.HSVToColor(hsvColor));
 
-        String newRGBColor = currentColorButton.GetStringRGBColor();
-        String newHSVColor = currentColorButton.GetStringHSVColor();
+        String newRGBColor = ColorButton.GetStringRGBColor(hsvColor);
+        String newHSVColor = ColorButton.GetStringHSVColor(hsvColor);
 
         rgbText.setText(newRGBColor);
         hsvText.setText(newHSVColor);
@@ -136,10 +133,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
         chooseColorView.setBackgroundColor(
-                Color.HSVToColor(currentColorButton.currentColor));
+                Color.HSVToColor(currentColorButton.getCurrentColor()));
 
-        String newRGBColor = currentColorButton.GetStringRGBColor();
-        String newHSVColor = currentColorButton.GetStringHSVColor();
+        String newRGBColor = ColorButton.GetStringRGBColor(currentColorButton.getCurrentColor());
+        String newHSVColor = ColorButton.GetStringHSVColor(currentColorButton.getCurrentColor());
 
         rgbText.setText(newRGBColor);
         hsvText.setText(newHSVColor);
@@ -175,6 +172,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public boolean onTouch(View view, MotionEvent event) {
                 ColorPickerScroll scroll = (ColorPickerScroll) findViewById(R.id.colorPickerScroll);
                 ColorButton currentColorButton = (ColorButton) view;
+
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         x = event.getX();
@@ -182,17 +180,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         HandleActionDown(currentColorButton);
                         break;
                     case MotionEvent.ACTION_MOVE:
-                        if (!scroll.isEdited) {
+                        if (scroll.getIsCanMove()) {
                             break;
                         }
                         HandleActionMove(currentColorButton, x, y, event.getX(), event.getY());
                         break;
-                    case MotionEvent.ACTION_CANCEL:
-                        if (scroll.isEdited) {
+                    case MotionEvent.ACTION_UP:
+                        if (!scroll.getIsCanMove()) {
                             Toast toast = Toast.makeText(getApplicationContext(),
                                     "Editing is finished", Toast.LENGTH_SHORT);
                             toast.show();
-                            scroll.isEdited = false;
+                            scroll.setIsCanMove(true);
                         }
                         break;
                 }
@@ -206,51 +204,51 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                     float x, float y) {
 
         if (oldX < x && Math.abs(oldY - y) < 1) {
-            if (currentColorButton.currentColor[0] == currentColorButton.rightBorder) {
+            if (currentColorButton.getCurrentColor()[0] == currentColorButton.getRightBorder()) {
                 CallVibrator();
             }
-            if (currentColorButton.currentColor[0] < currentColorButton.rightBorder) {
-                currentColorButton.currentColor[0] += 0.25;
+            if (currentColorButton.getCurrentColor()[0] < currentColorButton.getRightBorder()) {
+                currentColorButton.getCurrentColor()[0] += 0.25;
                 currentColorButton.setBackgroundColor(
-                        Color.HSVToColor(currentColorButton.currentColor));
+                        Color.HSVToColor(currentColorButton.getCurrentColor()));
                 DisplayOnPalitreStatus(currentColorButton);
             }
             return;
         }
 
         if (oldX > x && Math.abs(oldY - y) < 1) {
-            if (currentColorButton.currentColor[0] == currentColorButton.leftBorder) {
+            if (currentColorButton.getCurrentColor()[0] == currentColorButton.getLeftBorder()) {
                 CallVibrator();
             }
-            if (currentColorButton.currentColor[0] > currentColorButton.leftBorder) {
-                currentColorButton.currentColor[0] -= 0.25;
+            if (currentColorButton.getCurrentColor()[0] > currentColorButton.getLeftBorder()) {
+                currentColorButton.getCurrentColor()[0] -= 0.25;
                 currentColorButton.setBackgroundColor(
-                        Color.HSVToColor(currentColorButton.currentColor));
+                        Color.HSVToColor(currentColorButton.getCurrentColor()));
                 DisplayOnPalitreStatus(currentColorButton);
             }
             return;
         }
 
         if (oldY < y && Math.abs(oldX - x) < 1) {
-            if (currentColorButton.currentColor[2] <= currentColorButton.downBorderColor) {
+            if (currentColorButton.getCurrentColor()[2] <= currentColorButton.downBorderColor) {
                 CallVibrator();
             }
-            if (currentColorButton.currentColor[2] > currentColorButton.downBorderColor) {
-                currentColorButton.currentColor[2] -= 0.05;
+            if (currentColorButton.getCurrentColor()[2] > currentColorButton.downBorderColor) {
+                currentColorButton.getCurrentColor()[2] -= 0.05;
                 currentColorButton.setBackgroundColor(
-                        Color.HSVToColor(currentColorButton.currentColor));
+                        Color.HSVToColor(currentColorButton.getCurrentColor()));
                 DisplayOnPalitreStatus(currentColorButton);
             }
             return;
         }
         if (oldY > y && Math.abs(oldX - x) < 1) {
-            if (currentColorButton.currentColor[2] == currentColorButton.upBorderColor) {
+            if (currentColorButton.getCurrentColor()[2] == currentColorButton.upBorderColor) {
                 CallVibrator();
             }
-            if (currentColorButton.currentColor[2] < currentColorButton.upBorderColor) {
-                currentColorButton.currentColor[2] += 0.05;
+            if (currentColorButton.getCurrentColor()[2] < currentColorButton.upBorderColor) {
+                currentColorButton.getCurrentColor()[2] += 0.05;
                 currentColorButton.setBackgroundColor(
-                        Color.HSVToColor(currentColorButton.currentColor));
+                        Color.HSVToColor(currentColorButton.getCurrentColor()));
                 DisplayOnPalitreStatus(currentColorButton);
             }
         }
@@ -260,7 +258,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if (IsDoubleClick(currentColorButton.lastClickTime)) {
             currentColorButton.setBackgroundColor(
-                    Color.HSVToColor(currentColorButton.originalColor));
+                    Color.HSVToColor(currentColorButton.getOriginalColor()));
             currentColorButton.DiscardColor();
             DisplayOnPalitreStatus(currentColorButton);
             currentColorButton.lastClickTime = SystemClock.elapsedRealtime();
@@ -268,12 +266,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         currentColorButton.lastClickTime = SystemClock.elapsedRealtime();
-        DisplayCurrentStatus(currentColorButton);
+        DisplayCurrentStatus(currentColorButton.getCurrentColor());
     }
 
     protected void DisableColorPickerScroll() {
         ColorPickerScroll scroll = (ColorPickerScroll) findViewById(R.id.colorPickerScroll);
-        scroll.isEdited = true;
+        scroll.setIsCanMove(false);
     }
 
     protected void CallVibrator() {
@@ -283,34 +281,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     protected void CreateColorPicker() {
         float[] pixelHSV = new float[3];
-        pixelHSV[0] = 0;
+        pixelHSV[0] = 12.25f;
         pixelHSV[1] = 1;
         pixelHSV[2] = 1;
         int countButtons = 16;
         final LinearLayout colorPickerLayout = (LinearLayout) findViewById(R.id.colorPickerLayout);
 
         for (int i = 0; i < countButtons; i++) {
-            pixelHSV[0] += 22.5;
-            ColorButton button = GetNewButton(pixelHSV);
+            ColorButton button = new ColorButton(this, pixelHSV.clone());
             button.setOnLongClickListener(GetOnLongClickListener());
             button.setOnTouchListener(GetOnTouchListener());
             colorPickerLayout.addView(button);
+            pixelHSV[0] += 22.5;
         }
-        SetGradientBackGround(colorPickerLayout);
+        GradientColorPicker.SetGradientBackGround(colorPickerLayout);
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.favoriteColorsButton:
-                Intent intent = new Intent(this, ColorsActivity.class);
-                ArrayList<Integer> colors = new ArrayList<Integer>();
-                ArrayDeque<Integer> newFavorites = favoriteColors.clone();
-                while (newFavorites.size() != 0) {
-                    colors.add(newFavorites.pop());
-                }
-                intent.putExtra("colors", colors);
-                startActivity(intent);
-        }
-    }
 }

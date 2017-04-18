@@ -9,191 +9,19 @@
     tools:context="comnikitc.github.mobdev_hw_2.MainActivity">
 
 
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/elements"
-        android:gravity="center_horizontal">
 
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_height="match_parent"
-            android:layout_above="@+id/colorPickerScroll"
-            android:gravity="bottom|center_horizontal"
-            android:id="@+id/chooseLayout"
-            android:layout_alignParentStart="true"
-            android:layout_width="268dp">
-
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="wrap_content"
-                android:layout_alignStart="@+id/chooseColorImage"
-                android:layout_height="100dp"
-                android:gravity="bottom"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp">
-
-                <ImageView
-                    android:id="@+id/currentColorImage"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:background="@android:color/black"
-                    android:textAlignment="gravity"
-                    android:layout_gravity="bottom|center_horizontal"
-                    android:layout_marginTop="20dp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_height="60dp"
-                android:gravity="center_horizontal"
-                android:layout_width="80dp">
-
-                <TextView
-                    android:text="RGB"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/currentColorRGB"
-                    android:textAlignment="gravity"
-                    android:gravity="top|center" />
-
-                <TextView
-                    android:text="(0, 0, 0)"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:id="@+id/currentValueRGB"
-                    android:textAlignment="gravity"
-                    android:gravity="bottom|center"
-                    android:textSize="12sp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_height="60dp"
-                android:id="@+id/currentHSVLayout"
-
-                android:weightSum="1"
-                android:elevation="1dp"
-                android:gravity="center_horizontal"
-                android:layout_width="match_parent">
-
-                <TextView
-                    android:text="HSV"
-                    android:layout_width="45dp"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/currentColorHSV"
-                    android:layout_centerHorizontal="true"
-                    android:gravity="top|center" />
-
-                <TextView
-                    android:text="(0, 0, 0)"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:id="@+id/currentValueHSV"
-                    android:textAlignment="gravity"
-                    android:layout_centerHorizontal="true"
-                    android:gravity="bottom|center"
-                    android:textSize="12sp" />
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/currentLayout"
-            android:layout_alignParentTop="false"
-            android:layout_alignParentEnd="false"
-            android:gravity="bottom|center_horizontal"
-            android:layout_alignParentStart="false">
-
-
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="wrap_content"
-                android:layout_alignStart="@+id/chooseColorImage"
-                android:layout_height="100dp"
-                android:gravity="bottom"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="10dp">
-
-                <ImageView
-                    android:id="@+id/chooseColorImage"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:background="@android:color/black"
-                    android:textAlignment="gravity"
-                    android:layout_gravity="bottom|center_horizontal"
-                    android:layout_marginTop="20dp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_height="60dp"
-                android:gravity="center_horizontal"
-                android:layout_width="80dp">
-
-                <TextView
-                    android:text="RGB"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/chooseColorRGB"
-                    android:textAlignment="gravity"
-                    android:gravity="top|center" />
-
-                <TextView
-                    android:text="(0, 0, 0)"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:id="@+id/chooseValueRGB"
-                    android:textAlignment="gravity"
-                    android:gravity="bottom"
-                    android:textSize="12sp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_height="60dp"
-                android:id="@+id/chooseHSVLayout"
-
-                android:weightSum="1"
-                android:elevation="1dp"
-                android:gravity="center"
-                android:layout_width="match_parent">
-
-                <TextView
-                    android:text="HSV"
-                    android:layout_width="45dp"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/chooseColorHSV"
-                    android:layout_centerHorizontal="true"
-                    android:gravity="top|center" />
-
-                <TextView
-                    android:text="(0, 0, 0)"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:id="@+id/chooseValueHSV"
-                    android:textAlignment="gravity"
-                    android:layout_centerHorizontal="true"
-                    android:gravity="bottom|center"
-                    android:textSize="12sp" />
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-    </LinearLayout>
+    <Button
+        android:layout_height="30dp"
+        android:id="@+id/favoritebutton"
+        android:background="@android:drawable/star_big_on"
+        android:layout_width="30dp"
+        android:layout_alignParentEnd="true" />
 
     <comnikitc.github.mobdev_hw_2.ColorPickerScroll
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/colorPickerScroll"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true">
+        android:id="@+id/colorPickerScroll">
 
         <LinearLayout
             android:layout_height="match_parent"
@@ -209,27 +37,11 @@
 
     <FrameLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:text="Цвет на палитре"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/currentColor"
-            android:textAlignment="gravity"
-            android:gravity="top|left"
-            android:textSize="12sp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentStart="true"
-            android:layout_marginStart="69dp" />
-    </FrameLayout>
-
-    <FrameLayout
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/colorPickerScroll"
+        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="101dp">
+        android:layout_marginLeft="15dp">
 
         <TextView
             android:text="Выбранный цвет"
@@ -239,26 +51,176 @@
             android:textAlignment="gravity"
             android:gravity="top|left"
             android:textSize="12sp"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true" />
+            android:layout_alignParentTop="false"
+            android:layout_toEndOf="@+id/frameLayout2" />
     </FrameLayout>
 
-
-    <Button
-        android:layout_height="30dp"
-        android:id="@+id/favoritebutton"
-        android:background="@android:drawable/star_big_on"
-        android:layout_width="30dp"
-        android:layout_alignParentEnd="true" />
-
-    <Button
-        android:layout_height="30dp"
-        android:id="@+id/favoriteColorsButton"
-        android:textSize="9sp"
-        android:text="Favorites"
-        android:layout_width="75dp"
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/elements"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignParentStart="true">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/colorPickerScroll"
+            android:gravity="bottom"
+            android:id="@+id/chooseLayout">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_alignStart="@+id/chooseColorImage"
+                android:gravity="bottom"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="20dp"
+                android:layout_height="80dp">
+
+                <comnikitc.github.mobdev_hw_2.ColorImageView
+                    android:id="@+id/chooseColorImage"
+                    android:background="@android:color/black"
+                    android:textAlignment="gravity"
+                    android:layout_gravity="bottom|center_horizontal"
+                    android:layout_marginTop="20dp"
+                    android:layout_height="50dp"
+                    android:layout_width="50dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_height="60dp"
+                android:layout_width="120dp">
+
+                <TextView
+                    android:text="HSV (0 ,0, 0)"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/chooseValueHSV"
+                    android:textAlignment="gravity"
+                    android:gravity="top"
+                    android:textSize="10sp" />
+
+                <TextView
+                    android:text="RGB (0, 0, 0)"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:id="@+id/chooseValueRGB"
+                    android:textAlignment="gravity"
+                    android:gravity="bottom|center"
+                    android:textSize="10sp" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/currentLayout"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:gravity="bottom">
+
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_alignStart="@+id/chooseColorImage"
+                android:layout_height="80dp"
+                android:gravity="bottom"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="20dp">
+
+                <ImageView
+                    android:id="@+id/currentColorImage"
+                    android:background="@android:color/black"
+                    android:textAlignment="gravity"
+                    android:layout_gravity="bottom|center_horizontal"
+                    android:layout_marginTop="20dp"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_height="60dp"
+                android:layout_width="wrap_content">
+
+                <TextView
+                    android:text="HSV: (0, 0, 0)"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/currentValueHSV"
+                    android:textAlignment="gravity"
+                    android:gravity="top"
+                    android:textSize="10sp" />
+
+                <TextView
+                    android:text="RGB: (0, 0, 0)"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:id="@+id/currentValueRGB"
+                    android:textAlignment="gravity"
+                    android:gravity="bottom"
+                    android:textSize="10sp" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_alignParentStart="false"
+        android:id="@+id/favoriteColors"
+        android:layout_height="wrap_content"
+        android:gravity="top|right"
+        android:layout_toRightOf="@+id/elements"
+        android:layout_marginTop="50dp"
+        android:layout_marginLeft="60dp"></LinearLayout>
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="57dp">
+
+        <TextView
+            android:text="Избранные цвета"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/favorites"
+            android:textSize="12sp"
+            android:layout_below="@+id/elements"
+            android:layout_above="@+id/favoriteColors" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginEnd="30dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignEnd="@+id/elements">
+
+        <TextView
+            android:text="Цвет на палитре"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/currentColor"
+            android:textAlignment="gravity"
+            android:gravity="top|left"
+            android:textSize="12sp"
+            android:layout_above="@+id/colorPickerScroll"
+            android:layout_alignParentEnd="false" />
+    </FrameLayout>
 
 
 </RelativeLayout>
