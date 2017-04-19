@@ -5,7 +5,6 @@ import android.os.SystemClock;
 import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -96,7 +95,6 @@ public class MainActivity extends AppCompatActivity{
     protected void CreateFavoriteColors() {
         LinearLayout favoriteColorsLayout = (LinearLayout) findViewById(R.id.favoriteColors);
         favoriteColorsLayout.removeAllViews();
-        Log.d("size",  favoriteColors.size() + "");
         for (int i = 0; i < favoriteColors.size(); i++) {
             FavoriteButton button = new FavoriteButton(this, favoriteColors.get(i));
             button.setBackgroundColor(Color.HSVToColor(favoriteColors.get(i)));
@@ -198,10 +196,12 @@ public class MainActivity extends AppCompatActivity{
                         break;
                     case MotionEvent.ACTION_MOVE:
                         if (scroll.getIsCanMove()) {
+
                             break;
                         }
                         HandleActionMove(currentColorButton, x, y, event.getX(), event.getY());
                         break;
+                    case MotionEvent.ACTION_CANCEL:
                     case MotionEvent.ACTION_UP:
                         view.getParent().requestDisallowInterceptTouchEvent(false);
                         if (!scroll.getIsCanMove()) {
@@ -218,58 +218,43 @@ public class MainActivity extends AppCompatActivity{
         return onClickListener;
     }
 
+    protected int getSign(double number) {
+        if (number > 0)
+            return 1;
+        else if (number < 0)
+            return  -1;
+
+        return 0;
+    }
+
+
     protected void HandleActionMove(ColorButton currentColorButton, float oldX, float oldY,
                                     float x, float y) {
+        float deltaX = x - oldX;
+        float deltaY = oldY - y;
 
-        if (oldX < x) {
-            if (currentColorButton.getCurrentColor()[0] == currentColorButton.getRightBorder()) {
-                CallVibrator();
-            }
-            if (currentColorButton.getCurrentColor()[0] < currentColorButton.getRightBorder()) {
-                currentColorButton.getCurrentColor()[0] += 0.25;
-                currentColorButton.setBackgroundColor(
-                        Color.HSVToColor(currentColorButton.getCurrentColor()));
-                DisplayOnPalitreStatus(currentColorButton);
-            }
-            return;
+        if (((currentColorButton.getCurrentColor()[0] == currentColorButton.getRightBorder()) &&
+                getSign(deltaX) > 0) ||
+                ((currentColorButton.getCurrentColor()[0] == currentColorButton.getLeftBorder() &&
+                getSign(deltaX) < 0))) {
+            CallVibrator();
+        } else {
+            currentColorButton.getCurrentColor()[0] += 0.25 * getSign(deltaX);
         }
 
-        if (oldX > x) {
-            if (currentColorButton.getCurrentColor()[0] == currentColorButton.getLeftBorder()) {
-                CallVibrator();
-            }
-            if (currentColorButton.getCurrentColor()[0] > currentColorButton.getLeftBorder()) {
-                currentColorButton.getCurrentColor()[0] -= 0.25;
-                currentColorButton.setBackgroundColor(
-                        Color.HSVToColor(currentColorButton.getCurrentColor()));
-                DisplayOnPalitreStatus(currentColorButton);
-            }
-            return;
+
+        if (((currentColorButton.getCurrentColor()[2] == currentColorButton.upBorderColor) &&
+                getSign(deltaY) > 0) ||
+                ((currentColorButton.getCurrentColor()[2] == currentColorButton.downBorderColor &&
+                        getSign(deltaY) < 0))) {
+            CallVibrator();
+        } else {
+            currentColorButton.getCurrentColor()[2] += 0.05 * getSign(deltaY);
         }
 
-        if (oldY < y) {
-            if (currentColorButton.getCurrentColor()[2] <= currentColorButton.downBorderColor) {
-                CallVibrator();
-            }
-            if (currentColorButton.getCurrentColor()[2] > currentColorButton.downBorderColor) {
-                currentColorButton.getCurrentColor()[2] -= 0.05;
-                currentColorButton.setBackgroundColor(
-                        Color.HSVToColor(currentColorButton.getCurrentColor()));
-                DisplayOnPalitreStatus(currentColorButton);
-            }
-            return;
-        }
-        if (oldY > y) {
-            if (currentColorButton.getCurrentColor()[2] == currentColorButton.upBorderColor) {
-                CallVibrator();
-            }
-            if (currentColorButton.getCurrentColor()[2] < currentColorButton.upBorderColor) {
-                currentColorButton.getCurrentColor()[2] += 0.05;
-                currentColorButton.setBackgroundColor(
-                        Color.HSVToColor(currentColorButton.getCurrentColor()));
-                DisplayOnPalitreStatus(currentColorButton);
-            }
-        }
+        currentColorButton.setBackgroundColor(
+                Color.HSVToColor(currentColorButton.getCurrentColor()));
+        DisplayOnPalitreStatus(currentColorButton);
     }
 
     protected void HandleActionDown(ColorButton currentColorButton) {
