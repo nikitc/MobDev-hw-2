@@ -8,13 +8,13 @@ import android.widget.HorizontalScrollView;
 
 public class ColorPickerScroll extends HorizontalScrollView {
 
-    private Boolean isCanMove = true;
+    private Boolean canMove = true;
     public Boolean getIsCanMove() {
-        return isCanMove;
+        return canMove;
     }
 
     public void setIsCanMove(Boolean value) {
-        isCanMove = value;
+        canMove = value;
     }
 
     public ColorPickerScroll(Context context) {
@@ -28,9 +28,4 @@ public class ColorPickerScroll extends HorizontalScrollView {
         super(context, attrs, defStyleAttr);
     }
 
-
-    @Override
-    public boolean onTouchEvent(MotionEvent ev) {
-        return isCanMove && super.onTouchEvent(ev);
-    }
 }

@@ -5,6 +5,7 @@ import android.os.SystemClock;
 import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -67,6 +68,20 @@ public class MainActivity extends AppCompatActivity{
                 if (favoriteColors.size() == maxFavoriteColors) {
                     favoriteColors.remove(0);
                 }
+                if (chooseColor.getHsvColor() == null) {
+
+                    Toast toast = Toast.makeText(getApplicationContext(),
+                            "Избранных цветов нет", Toast.LENGTH_SHORT);
+                    toast.show();
+                    return;
+                }
+                if (favoriteColors.contains(chooseColor.getHsvColor())) {
+                    Toast toast = Toast.makeText(getApplicationContext(),
+                            "Цвет есть в избранных", Toast.LENGTH_SHORT);
+                    toast.show();
+                    return;
+                }
+
                 favoriteColors.add(chooseColor.getHsvColor());
 
                 Toast toast = Toast.makeText(getApplicationContext(),
@@ -81,6 +96,7 @@ public class MainActivity extends AppCompatActivity{
     protected void CreateFavoriteColors() {
         LinearLayout favoriteColorsLayout = (LinearLayout) findViewById(R.id.favoriteColors);
         favoriteColorsLayout.removeAllViews();
+        Log.d("size",  favoriteColors.size() + "");
         for (int i = 0; i < favoriteColors.size(); i++) {
             FavoriteButton button = new FavoriteButton(this, favoriteColors.get(i));
             button.setBackgroundColor(Color.HSVToColor(favoriteColors.get(i)));
@@ -155,6 +171,7 @@ public class MainActivity extends AppCompatActivity{
                         "Start editing", Toast.LENGTH_SHORT);
                 toast.show();
                 DisableColorPickerScroll();
+                view.getParent().requestDisallowInterceptTouchEvent(true);
                 return true;
             }
         };
@@ -167,10 +184,10 @@ public class MainActivity extends AppCompatActivity{
         View.OnTouchListener onClickListener = new View.OnTouchListener() {
             float x = 0;
             float y = 0;
+            ColorPickerScroll scroll = (ColorPickerScroll) findViewById(R.id.colorPickerScroll);
 
             @Override
             public boolean onTouch(View view, MotionEvent event) {
-                ColorPickerScroll scroll = (ColorPickerScroll) findViewById(R.id.colorPickerScroll);
                 ColorButton currentColorButton = (ColorButton) view;
 
                 switch (event.getAction()) {
@@ -186,6 +203,7 @@ public class MainActivity extends AppCompatActivity{
                         HandleActionMove(currentColorButton, x, y, event.getX(), event.getY());
                         break;
                     case MotionEvent.ACTION_UP:
+                        view.getParent().requestDisallowInterceptTouchEvent(false);
                         if (!scroll.getIsCanMove()) {
                             Toast toast = Toast.makeText(getApplicationContext(),
                                     "Editing is finished", Toast.LENGTH_SHORT);
@@ -203,7 +221,7 @@ public class MainActivity extends AppCompatActivity{
     protected void HandleActionMove(ColorButton currentColorButton, float oldX, float oldY,
                                     float x, float y) {
 
-        if (oldX < x && Math.abs(oldY - y) < 1) {
+        if (oldX < x) {
             if (currentColorButton.getCurrentColor()[0] == currentColorButton.getRightBorder()) {
                 CallVibrator();
             }
@@ -216,7 +234,7 @@ public class MainActivity extends AppCompatActivity{
             return;
         }
 
-        if (oldX > x && Math.abs(oldY - y) < 1) {
+        if (oldX > x) {
             if (currentColorButton.getCurrentColor()[0] == currentColorButton.getLeftBorder()) {
                 CallVibrator();
             }
@@ -229,7 +247,7 @@ public class MainActivity extends AppCompatActivity{
             return;
         }
 
-        if (oldY < y && Math.abs(oldX - x) < 1) {
+        if (oldY < y) {
             if (currentColorButton.getCurrentColor()[2] <= currentColorButton.downBorderColor) {
                 CallVibrator();
             }
@@ -241,7 +259,7 @@ public class MainActivity extends AppCompatActivity{
             }
             return;
         }
-        if (oldY > y && Math.abs(oldX - x) < 1) {
+        if (oldY > y) {
             if (currentColorButton.getCurrentColor()[2] == currentColorButton.upBorderColor) {
                 CallVibrator();
             }
@@ -292,7 +310,7 @@ public class MainActivity extends AppCompatActivity{
             button.setOnLongClickListener(GetOnLongClickListener());
             button.setOnTouchListener(GetOnTouchListener());
             colorPickerLayout.addView(button);
-            pixelHSV[0] += 22.5;
+            pixelHSV[0] += 22.25;
         }
         GradientColorPicker.SetGradientBackGround(colorPickerLayout);
     }
