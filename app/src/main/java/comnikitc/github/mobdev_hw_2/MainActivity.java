@@ -5,6 +5,7 @@ import android.os.SystemClock;
 import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -230,26 +231,31 @@ public class MainActivity extends AppCompatActivity{
 
     protected void HandleActionMove(ColorButton currentColorButton, float oldX, float oldY,
                                     float x, float y) {
+        Log.d("MoveO", oldX + " " + oldY);
+        Log.d("MoveN", x + " " + y);
+
         float deltaX = x - oldX;
         float deltaY = oldY - y;
 
-        if (((currentColorButton.getCurrentColor()[0] == currentColorButton.getRightBorder()) &&
-                getSign(deltaX) > 0) ||
-                ((currentColorButton.getCurrentColor()[0] == currentColorButton.getLeftBorder() &&
-                getSign(deltaX) < 0))) {
-            CallVibrator();
-        } else {
-            currentColorButton.getCurrentColor()[0] += 0.25 * getSign(deltaX);
-        }
 
-
-        if (((currentColorButton.getCurrentColor()[2] == currentColorButton.upBorderColor) &&
-                getSign(deltaY) > 0) ||
-                ((currentColorButton.getCurrentColor()[2] == currentColorButton.downBorderColor &&
-                        getSign(deltaY) < 0))) {
-            CallVibrator();
+        if (Math.abs(deltaX) > Math.abs(deltaY)) {
+            if (((currentColorButton.getCurrentColor()[0] == currentColorButton.getRightBorder()) &&
+                    getSign(deltaX) > 0) ||
+                    ((currentColorButton.getCurrentColor()[0] == currentColorButton.getLeftBorder() &&
+                            getSign(deltaX) < 0))) {
+                CallVibrator();
+            } else {
+                currentColorButton.getCurrentColor()[0] += 0.25 * getSign(deltaX);
+            }
         } else {
-            currentColorButton.getCurrentColor()[2] += 0.05 * getSign(deltaY);
+            if (((currentColorButton.getCurrentColor()[2] == currentColorButton.upBorderColor) &&
+                    getSign(deltaY) > 0) ||
+                    ((Math.max(currentColorButton.getCurrentColor()[2], 0) == currentColorButton.downBorderColor &&
+                            getSign(deltaY) < 0))) {
+                CallVibrator();
+            } else {
+                currentColorButton.getCurrentColor()[2] += 0.025 * getSign(deltaY);
+            }
         }
 
         currentColorButton.setBackgroundColor(

@@ -35,7 +35,7 @@ public class ColorButton extends Button implements View.OnLongClickListener {
 
     public long lastClickTime = 0;
     public final float upBorderColor = 1;
-    public final float downBorderColor = 0.0f;
+    public final float downBorderColor = 0;
 
     private Boolean isBeingEdited = false;
     public Boolean getIsBeingEdited() {

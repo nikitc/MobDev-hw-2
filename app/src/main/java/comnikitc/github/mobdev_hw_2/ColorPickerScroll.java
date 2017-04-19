@@ -27,5 +27,4 @@ public class ColorPickerScroll extends HorizontalScrollView {
     public ColorPickerScroll(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
-
 }
